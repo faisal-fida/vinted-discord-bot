@@ -1,64 +1,58 @@
-# My Discord Bot for Vinted Automation
+# vinted-discord-bot
 
-This project is a Discord bot designed to automate interactions with the Vinted website, allowing users to buy and sell clothes, shoes, and accessories. The bot provides functionalities for user authentication, item filtering, real-time search, and automated purchases.
+A Discord bot skeleton for Vinted automation (login, filters, search, purchase). Only the Discord command layer exists; the Vinted logic is not implemented.
 
-## Project Structure
+Originally named Vinted-Discord-Bot.
+
+## Status
+
+Stub. The commands register and reply, but nothing talks to Vinted:
+
+- `/log-in` and `/log-out` only log a message and reply (no authentication).
+- `/filter_edit` and `/filter_view` store filters in memory in a dictionary.
+- `/start_search` and `/stop_search` flip a flag; the search loop is a comment.
+- `/buy` logs the item ID; no purchase happens.
+- `send_item_details` (DM an item) is defined but never called.
+- Proxy, captcha and "Buy" button features mentioned in the earlier README do not exist in the code.
+
+## Tech stack
+
+Python, discord.py (slash commands via `app_commands`), python-dotenv. `playwright` and `aiohttp` are listed in requirements but unused so far.
+
+## Project structure
 
 ```
-my-discord-bot
-├── cogs
-│   ├── auth.py          # Manages user authentication
-│   ├── filter.py        # Allows users to configure item filters
-│   ├── search.py        # Implements continuous item search
-│   ├── purchase.py      # Automates purchases and handles proxies
-│   └── __init__.py      # Initializes the cogs package
-├── requirements.txt      # Lists project dependencies
-├── main.py               # Entry point of the bot
-└── README.md             # Documentation for the project
+main.py            bot setup, loads cogs, syncs slash commands
+cogs/auth.py       /log-in, /log-out (placeholders)
+cogs/filter.py     /filter_edit, /filter_view
+cogs/search.py     /start_search, /stop_search
+cogs/purchase.py   /buy (placeholder)
+requirements.txt
 ```
 
-## Features
+## Setup and run
 
-- **User Authentication**: 
-  - `/log-in`: Link your Vinted account.
-  - `/log-out`: Unlink your Vinted account.
+Requirements: Python 3.9 or newer, a Discord application with a bot token.
 
-- **Filter Configuration**: 
-  - `/filter-edit`: Set up item filters based on size, category, condition, etc.
+Environment variables (put them in a `.env` file, which is git-ignored):
 
-- **Real-time Item Search**: 
-  - `/search-start`: Start a continuous search for items and receive notifications via DM.
+| Name | Purpose |
+|---|---|
+| `DISCORD_TOKEN` | Discord bot token |
 
-- **Automated Purchases**: 
-  - Buy items directly through the bot with a "Buy" button in item embeds.
-  - Proxy support and anti-bot/captcha handling for secure transactions.
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+echo 'DISCORD_TOKEN=your-token' > .env
+python main.py
+```
 
-## Setup Instructions
+## Usage
 
-1. Clone the repository:
-   ```
-   git clone <repository-url>
-   cd my-discord-bot
-   ```
+Invite the bot to a server, then use the slash commands, for example `/filter_edit filter_type:size value:M` and `/filter_view`.
 
-2. Install the required dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
+## Limitations
 
-3. Configure your bot token and other settings in `main.py`.
-
-4. Run the bot:
-   ```
-   python main.py
-   ```
-
-## Usage Guidelines
-
-- Use the commands in your Discord server where the bot is active.
-- Ensure your Vinted account is properly linked for authentication features.
-- Adjust filters as needed to refine your item search.
-
-## Contributing
-
-Feel free to submit issues or pull requests to enhance the functionality of the bot.
+- Do not type real passwords into `/log-in`: it is a placeholder and slash command arguments are visible to Discord.
+- Filters are lost on restart.
+- Automating a Vinted account may break Vinted's terms of use.
